@@ -18,9 +18,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Import your pages router
 const pagesRouter = require('./routes/pages');
+const bookingRouter = require('./routes/bookings');
 
 // Use the pagesRouter for related routes
 app.use('/', pagesRouter);
+app.use('/', bookingRouter);
 
 // Example home route
 app.get('/', (req, res) => {

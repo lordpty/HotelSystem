@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { createBooking } = require('../controllers/bookingController');
 
 // Render login page
 router.get('/login', (req, res) => {
@@ -15,6 +16,42 @@ router.get('/signup', (req, res) => {
 router.get('/booking', (req, res) => {
   res.render('booking', { title: 'New Booking' });
 });
+
+router.post('/booking', async (req, res) => {
+    const { guestName, roomType, checkIn, checkOut, paymentStatus } = req.body;
+  
+    try {
+      const { bookingId, roomNumber } = await createBooking(
+        guestName,
+        roomType,
+        checkIn,
+        checkOut,
+        paymentStatus
+      );
+  
+      // Send booking data including assigned room number to the template
+      res.render('booking', {
+        title: 'New Booking',
+        booking: {
+          guestName,
+          roomType,
+          checkIn,
+          checkOut,
+          paymentStatus,
+          roomNumber,
+          bookingId
+        }
+      });
+    } catch (error) {
+      // Handle errors, e.g. no rooms available
+      res.render('booking', {
+        title: 'New Booking',
+        error: error.message,
+        booking: null
+      });
+    }
+  });
+  
 
 // Render admin panel page
 router.get('/admin', (req, res) => {
