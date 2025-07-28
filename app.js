@@ -15,6 +15,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.urlencoded({ extended: true }));
 
 // Import your pages router
 const pagesRouter = require('./routes/pages');

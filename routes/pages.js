@@ -14,12 +14,12 @@ router.get('/signup', (req, res) => {
 
 // Render receptionist booking page
 router.get('/booking', (req, res) => {
-  res.render('booking', { title: 'New Booking' });
+  res.render('booking', { title: 'New Booking', booking: null});
 });
 
 router.post('/booking', async (req, res) => {
     const { guestName, roomType, checkIn, checkOut, paymentStatus } = req.body;
-  
+    console.log(guestName, roomType, checkIn, checkOut, paymentStatus)
     try {
       const { bookingId, roomNumber } = await createBooking(
         guestName,
@@ -28,6 +28,7 @@ router.post('/booking', async (req, res) => {
         checkOut,
         paymentStatus
       );
+      console.log("Booking ID:", bookingId)
   
       // Send booking data including assigned room number to the template
       res.render('booking', {
@@ -43,6 +44,7 @@ router.post('/booking', async (req, res) => {
         }
       });
     } catch (error) {
+      console.error(error)
       // Handle errors, e.g. no rooms available
       res.render('booking', {
         title: 'New Booking',

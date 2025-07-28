@@ -59,7 +59,7 @@ async function getAllBookings() {
   const conn = await pool.getConnection();
   try {
     const [rows] = await conn.query(
-      `SELECT b.id, b.guest_name, b.check_in, b.check_out, b.payment_status,
+      `SELECT b.id, b.guest_name, b.check_in, b.check_out, b.payment_status, b.created_at,
               r.room_number, r.room_type
        FROM bookings b
        JOIN rooms r ON b.room_id = r.id

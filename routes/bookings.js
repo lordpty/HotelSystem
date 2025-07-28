@@ -27,6 +27,8 @@ router.post('/booking', async (req, res) => {
 router.get('/bookings', async (req, res) => {
   try {
     const bookings = await bookingController.getAllBookings();
+    console.log("Booking sample:", bookings[0]);
+    console.log("create at:", bookings[0].created_at);
     res.render('allBookings', { title: 'All Bookings', bookings });
   } catch (error) {
     res.status(500).send('Error fetching bookings');
@@ -38,7 +40,7 @@ router.get('/booking/:id', async (req, res) => {
   try {
     const booking = await bookingController.getBookingById(req.params.id);
     if (!booking) return res.status(404).send('Booking not found');
-    res.render('bookingEdit', { title: 'Edit Booking', booking });
+    res.render('bookingEdit', { title: 'Edit Booking', booking, error:null });
   } catch (error) {
     res.status(500).send('Error fetching booking');
   }

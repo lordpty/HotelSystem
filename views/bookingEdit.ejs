@@ -1,0 +1,77 @@
+<h2 class="mb-4">Edit Booking #<%= booking.id %></h2>
+
+<% if (error) { %>
+  <div class="alert alert-danger w-75 mx-auto">
+    <%= error %>
+  </div>
+<% } %>
+
+<form 
+  action="/booking/<%= booking.id %>/edit" 
+  method="POST" 
+  class="w-75 mx-auto"
+>
+  <div class="mb-3">
+    <label for="guestName" class="form-label">Guest Name</label>
+    <input 
+      type="text" 
+      class="form-control" 
+      id="guestName" 
+      name="guestName" 
+      required 
+      value="<%= booking.guest_name %>"
+    >
+  </div>
+
+  <div class="mb-3">
+    <label for="roomType" class="form-label">Room Type (cannot be changed)</label>
+    <input 
+      type="text" 
+      class="form-control" 
+      id="roomType" 
+      name="roomType" 
+      value="<%= booking.room_type.charAt(0).toUpperCase() + booking.room_type.slice(1) %>" 
+      readonly
+    >
+  </div>
+
+  <div class="mb-3">
+    <label for="checkIn" class="form-label">Check-In Date</label>
+    <input 
+      type="date" 
+      class="form-control" 
+      id="checkIn" 
+      name="checkIn" 
+      required 
+      value="<%= booking.check_in.toISOString ? booking.check_in.toISOString().slice(0,10) : booking.check_in.split('T')[0] %>"
+    >
+  </div>
+
+  <div class="mb-3">
+    <label for="checkOut" class="form-label">Check-Out Date</label>
+    <input 
+      type="date" 
+      class="form-control" 
+      id="checkOut" 
+      name="checkOut" 
+      required 
+      value="<%= booking.check_out.toISOString ? booking.check_out.toISOString().slice(0,10) : booking.check_out.split('T')[0] %>"
+    >
+  </div>
+
+  <div class="mb-3">
+    <label for="paymentStatus" class="form-label">Payment Status</label>
+    <select 
+      id="paymentStatus" 
+      name="paymentStatus" 
+      class="form-select" 
+      required
+    >
+      <option value="pending" <%= booking.payment_status === 'pending' ? 'selected' : '' %>>Pending</option>
+      <option value="paid" <%= booking.payment_status === 'paid' ? 'selected' : '' %>>Paid</option>
+    </select>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Update Booking</button>
+  <a href="/bookings" class="btn btn-secondary ms-2">Cancel</a>
+</form>
