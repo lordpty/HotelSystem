@@ -1,0 +1,46 @@
+<h2 class="mb-4">New Booking</h2>
+
+<form action="/booking" method="POST" class="w-75 mx-auto">
+  <div class="mb-3">
+    <label for="guestName" class="form-label">Guest Name</label>
+    <input 
+      type="text" 
+      class="form-control" 
+      id="guestName" 
+      name="guestName" 
+      required 
+      placeholder="Enter guest's full name"
+    >
+  </div>
+
+  <div class="mb-3">
+    <label for="roomType" class="form-label">Room Type</label>
+    <select id="roomType" name="roomType" class="form-select" required>
+      <option value="" disabled selected>Select a room type</option>
+      <option value="single">Single</option>
+      <option value="double">Double</option>
+      <option value="suite">Suite</option>
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label for="checkIn" class="form-label">Check-In Date</label>
+    <input type="date" class="form-control" id="checkIn" name="checkIn" required>
+  </div>
+
+  <div class="mb-3">
+    <label for="checkOut" class="form-label">Check-Out Date</label>
+    <input type="date" class="form-control" id="checkOut" name="checkOut" required>
+  </div>
+
+  <div class="mb-3">
+    <label for="paymentStatus" class="form-label">Payment Status</label>
+    <select id="paymentStatus" name="paymentStatus" class="form-select" required>
+      <option value="" disabled selected>Select payment status</option>
+      <option value="pending">Pending</option>
+      <option value="paid">Paid</option>
+    </select>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Submit Booking</button>
+</form>
