@@ -1,16 +1,31 @@
 <h2 class="mb-4">New Booking</h2>
 
-<% if (booking) { %>
-  <div class="card mb-4 mx-auto w-75 border-success shadow">
-    <div class="card-header bg-success text-white">
-      Booking Successful
+<% if (error) { %>
+  <div class="alert alert-danger w-75 mx-auto" role="alert">
+    <%= error %>
+  </div>
+<% } else if (booking) { %>
+  <div class="alert alert-success w-75 mx-auto" role="alert">
+    Booking successful! Your reservation details:
+  </div>
+
+  <div class="card w-75 mx-auto mb-4">
+    <div class="card-header">
+      Booking #<%= booking.bookingId %> Details
     </div>
     <div class="card-body">
-      <h5 class="card-title">Guest: <%= booking.guestName %></h5>
-      <p class="card-text">Room Type: <%= booking.roomType.charAt(0).toUpperCase() + booking.roomType.slice(1) %></p>
-      <p class="card-text">Check-In: <%= booking.checkIn %></p>
-      <p class="card-text">Check-Out: <%= booking.checkOut %></p>
-      <p class="card-text">Payment Status: <%= booking.paymentStatus.charAt(0).toUpperCase() + booking.paymentStatus.slice(1) %></p>
+      <p><strong>Guest Name:</strong> <%= booking.guestName %></p>
+      <p><strong>Room Type:</strong> <%= booking.roomType.charAt(0).toUpperCase() + booking.roomType.slice(1) %></p>
+      <p><strong>Room Number:</strong> <%= booking.roomNumber %></p>
+      <p><strong>Check-In:</strong> <%= booking.checkIn %></p>
+      <p><strong>Check-Out:</strong> <%= booking.checkOut %></p>
+      <p><strong>Payment Status:</strong> 
+        <% if (booking.paymentStatus === 'paid') { %>
+          <span class="badge bg-success text-uppercase"><%= booking.paymentStatus %></span>
+        <% } else { %>
+          <span class="badge bg-warning text-uppercase"><%= booking.paymentStatus %></span>
+        <% } %>
+      </p>
     </div>
   </div>
 <% } %>
@@ -18,21 +33,20 @@
 <form action="/booking" method="POST" class="w-75 mx-auto">
   <div class="mb-3">
     <label for="guestName" class="form-label">Guest Name</label>
-    <input 
-      type="text" 
-      class="form-control" 
-      id="guestName" 
-      name="guestName" 
-      required 
-      placeholder="Enter guest's full name"
+    <input
+      type="text"
+      id="guestName"
+      name="guestName"
+      class="form-control"
+      required
       value="<%= booking ? booking.guestName : '' %>"
-    >
+    />
   </div>
 
   <div class="mb-3">
     <label for="roomType" class="form-label">Room Type</label>
     <select id="roomType" name="roomType" class="form-select" required>
-      <option value="" disabled <%= !booking ? 'selected' : '' %>>Select a room type</option>
+      <option value="" disabled <%= !booking ? 'selected' : '' %>>Select room type</option>
       <option value="single" <%= booking && booking.roomType === 'single' ? 'selected' : '' %>>Single</option>
       <option value="double" <%= booking && booking.roomType === 'double' ? 'selected' : '' %>>Double</option>
       <option value="suite" <%= booking && booking.roomType === 'suite' ? 'selected' : '' %>>Suite</option>
@@ -41,22 +55,35 @@
 
   <div class="mb-3">
     <label for="checkIn" class="form-label">Check-In Date</label>
-    <input type="date" class="form-control" id="checkIn" name="checkIn" required value="<%= booking ? booking.checkIn : '' %>">
+    <input
+      type="date"
+      id="checkIn"
+      name="checkIn"
+      class="form-control"
+      required
+      value="<%= booking ? booking.checkIn : '' %>"
+    />
   </div>
 
   <div class="mb-3">
     <label for="checkOut" class="form-label">Check-Out Date</label>
-    <input type="date" class="form-control" id="checkOut" name="checkOut" required value="<%= booking ? booking.checkOut : '' %>">
+    <input
+      type="date"
+      id="checkOut"
+      name="checkOut"
+      class="form-control"
+      required
+      value="<%= booking ? booking.checkOut : '' %>"
+    />
   </div>
 
   <div class="mb-3">
     <label for="paymentStatus" class="form-label">Payment Status</label>
     <select id="paymentStatus" name="paymentStatus" class="form-select" required>
-      <option value="" disabled <%= !booking ? 'selected' : '' %>>Select payment status</option>
       <option value="pending" <%= booking && booking.paymentStatus === 'pending' ? 'selected' : '' %>>Pending</option>
       <option value="paid" <%= booking && booking.paymentStatus === 'paid' ? 'selected' : '' %>>Paid</option>
     </select>
   </div>
 
-  <button type="submit" class="btn btn-primary">Submit Booking</button>
+  <button type="submit" class="btn btn-primary">Create Booking</button>
 </form>

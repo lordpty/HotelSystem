@@ -1,44 +1,81 @@
-<h2 class="mb-4">Rooms</h2>
-
-<% if (!rooms || rooms.length === 0) { %>
-  <div class="alert alert-info w-75 mx-auto">
-    No rooms found.
+<section class="content">
+  <div class="form-inline mb-3">
+    <div class="search-form" style="margin: 20px 0;">
+      <!-- <input
+        class="form-control mr-sm-9"
+        type="text"
+        placeholder="Search..."
+        aria-label="search"
+        id="room-search"
+      /> -->
+    </div>
+    <a href="/rooms/new" class="btn btn-success ml-auto">Add New Room</a>
   </div>
-<% } else { %>
-  <div class="table-responsive w-100 mx-auto">
-    <table class="table table-bordered table-striped align-middle">
-      <thead class="table-primary">
+  <table
+    id="dtVerticalScrollRooms"
+    class="table table-striped table-bordered small"
+    cellspacing="0"
+  >
+    <thead>
+      <tr>
+        <th class="th-sm">Room ID</th>
+        <th class="th-sm">Room Number</th>
+        <th class="th-sm">Room Type</th>
+        <th class="th-sm">Status</th>
+        <th class="th-sm">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (!rooms || rooms.length === 0) { %>
         <tr>
-          <th>Room Number</th>
-          <th>Room Type</th>
-          <th>Status</th>
-          <th>Actions</th> <!-- Optional: for future edit/delete or booking -->
+          <td colspan="5" class="text-center">No rooms found.</td>
         </tr>
-      </thead>
-      <tbody>
+      <% } else { %>
         <% rooms.forEach(room => { %>
           <tr>
+            <td><%= room.id %></td>
             <td><%= room.room_number %></td>
             <td><%= room.room_type.charAt(0).toUpperCase() + room.room_type.slice(1) %></td>
             <td>
               <% if (room.is_booked) { %>
-                <span class="badge bg-danger">Booked</span>
+                <span class="badge badge-danger">Booked</span>
               <% } else { %>
-                <span class="badge bg-success">Available</span>
+                <span class="badge badge-success">Available</span>
               <% } %>
             </td>
             <td>
-              <!-- Example action buttons - implement routes if needed -->
               <a href="/rooms/<%= room.id %>" class="btn btn-sm btn-outline-primary me-1">Details</a>
-              <% if (!room.is_booked) { %>
-                <a href="/booking?roomId=<%= room.id %>" class="btn btn-sm btn-outline-success">Book Now</a>
-              <% } else { %>
-                <button class="btn btn-sm btn-outline-secondary" disabled>Book Now</button>
-              <% } %>
+              <a href="/rooms/<%= room.id %>/edit" class="btn btn-sm btn-outline-warning me-1">Edit</a>
+              <form
+                action="/rooms/<%= room.id %>/delete"
+                method="POST"
+                class="d-inline"
+                onsubmit="return confirm('Are you sure you want to delete this room?');"
+              >
+                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+              </form>
             </td>
           </tr>
-        <% }); %>
-      </tbody>
-    </table>
-  </div>
-<% } %>
+        <% }) %>
+      <% } %>
+    </tbody>
+  </table>
+</section>
+
+<script>
+  $(document).ready(function () {
+    $('#dtVerticalScrollRooms').DataTable({
+      scrollY: '200px',
+      scrollCollapse: true,
+    });
+    $('.dataTables_length').addClass('bs-select');
+
+    // Simple client-side search filtering
+    $('#room-search').on('keyup', function () {
+      var value = $(this).val().toLowerCase();
+      $('#dtVerticalScrollRooms tbody tr').filter(function () {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+      });
+    });
+  });
+</script>

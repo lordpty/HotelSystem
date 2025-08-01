@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const expressLayouts = require('express-ejs-layouts'); // if you're using layouts
-
+const pool = require('./config/db');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -28,10 +28,25 @@ app.use('/', bookingRouter);
 app.use('/', roomsRouter);
 
 // Example home route
-app.get('/', (req, res) => {
-  res.render('index', { title: 'Home' });
+async function getDashboardStats() {
+  const [rows] = await pool.query(`
+    SELECT
+      (SELECT COUNT(*) FROM rooms) AS total_rooms,
+      (SELECT COUNT(*) FROM bookings) AS total_reservations,
+      (SELECT COUNT(*) FROM rooms WHERE is_booked = FALSE) AS available_rooms,
+      (SELECT COUNT(*) FROM rooms WHERE is_booked = TRUE) AS booked_rooms,
+      (SELECT COUNT(*) FROM rooms WHERE room_type = 'suite') AS vip_rooms;
+  `);
+  return rows[0];
+}
+app.get('/', async (req, res) => {
+  const stats = await getDashboardStats();
+  console.log(stats)
+  res.render('admin', {
+    title: 'Dashboard',
+    stats
+  });
 });
-
 // Start server
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

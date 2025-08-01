@@ -8,7 +8,8 @@ const pool = require('../config/db');
 router.get('/rooms', async (req, res) => {
   try {
     const [rooms] = await pool.query('SELECT * FROM rooms ORDER BY room_number ASC');
-    res.render('rooms', { title: 'Rooms', rooms });
+    // res.render('rooms', { title: 'Rooms', rooms });
+    res.render('rooms', {title: null, rooms});
   } catch (error) {
     console.error('Error fetching rooms:', error);
     res.status(500).send('Error fetching rooms');

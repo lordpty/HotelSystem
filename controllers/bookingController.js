@@ -42,7 +42,7 @@ async function createBooking(guestName, roomType, checkIn, checkOut, paymentStat
 
     await conn.commit();
 
-    return { bookingId: bookingResult.insertId, roomNumber: room.room_number };
+    ;
   } catch (err) {
     await conn.rollback();
     throw err;

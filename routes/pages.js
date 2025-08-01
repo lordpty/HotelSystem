@@ -15,7 +15,7 @@ router.get('/signup', (req, res) => {
 
 // Render receptionist booking page
 router.get('/booking', (req, res) => {
-  res.render('booking', { title: 'New Booking', booking: null});
+  res.render('booking', { title: 'New Booking', booking: null, error:null});
 });
 
 router.post('/booking', async (req, res) => {
@@ -42,16 +42,11 @@ router.post('/booking', async (req, res) => {
           paymentStatus,
           roomNumber,
           bookingId
-        }
+        },
+        error: null
       });
     } catch (error) {
-      console.error(error)
-      // Handle errors, e.g. no rooms available
-      res.render('booking', {
-        title: 'New Booking',
-        error: error.message,
-        booking: null
-      });
+      res.render('booking', { title: 'New Booking', error: error.message, booking: null });
     }
   });
   
