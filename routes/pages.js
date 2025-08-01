@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { createBooking } = require('../controllers/bookingController');
+const pool = require('../config/db');
 
 // Render login page
 router.get('/login', (req, res) => {

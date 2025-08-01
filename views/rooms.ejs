@@ -1,0 +1,44 @@
+<h2 class="mb-4">Rooms</h2>
+
+<% if (!rooms || rooms.length === 0) { %>
+  <div class="alert alert-info w-75 mx-auto">
+    No rooms found.
+  </div>
+<% } else { %>
+  <div class="table-responsive w-100 mx-auto">
+    <table class="table table-bordered table-striped align-middle">
+      <thead class="table-primary">
+        <tr>
+          <th>Room Number</th>
+          <th>Room Type</th>
+          <th>Status</th>
+          <th>Actions</th> <!-- Optional: for future edit/delete or booking -->
+        </tr>
+      </thead>
+      <tbody>
+        <% rooms.forEach(room => { %>
+          <tr>
+            <td><%= room.room_number %></td>
+            <td><%= room.room_type.charAt(0).toUpperCase() + room.room_type.slice(1) %></td>
+            <td>
+              <% if (room.is_booked) { %>
+                <span class="badge bg-danger">Booked</span>
+              <% } else { %>
+                <span class="badge bg-success">Available</span>
+              <% } %>
+            </td>
+            <td>
+              <!-- Example action buttons - implement routes if needed -->
+              <a href="/rooms/<%= room.id %>" class="btn btn-sm btn-outline-primary me-1">Details</a>
+              <% if (!room.is_booked) { %>
+                <a href="/booking?roomId=<%= room.id %>" class="btn btn-sm btn-outline-success">Book Now</a>
+              <% } else { %>
+                <button class="btn btn-sm btn-outline-secondary" disabled>Book Now</button>
+              <% } %>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+<% } %>

@@ -20,10 +20,12 @@ app.use(express.urlencoded({ extended: true }));
 // Import your pages router
 const pagesRouter = require('./routes/pages');
 const bookingRouter = require('./routes/bookings');
+const roomsRouter = require('./routes/rooms');
 
 // Use the pagesRouter for related routes
 app.use('/', pagesRouter);
 app.use('/', bookingRouter);
+app.use('/', roomsRouter);
 
 // Example home route
 app.get('/', (req, res) => {
