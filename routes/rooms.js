@@ -3,6 +3,11 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../config/db');
+const {
+  ensureAuthenticated,
+  ensureAdmin,
+  ensureReceptionistOrAdmin,
+} = require('../middlewares/auth');
 
 // List all rooms
 router.get('/rooms', async (req, res) => {
@@ -17,12 +22,12 @@ router.get('/rooms', async (req, res) => {
 });
 
 // Show form to create a new room
-router.get('/rooms/new', (req, res) => {
+router.get('/rooms/new', ensureAdmin,(req, res) => {
   res.render('roomForm', { title: 'Add New Room', room: {}, errors: null });
 });
 
 // Create a new room
-router.post('/rooms', async (req, res) => {
+router.post('/rooms', async(req, res) => {
   const { room_number, room_type } = req.body;
 
   // Basic validation
@@ -52,7 +57,7 @@ router.post('/rooms', async (req, res) => {
 });
 
 // Show a single room's details
-router.get('/rooms/:id', async (req, res) => {
+router.get('/rooms/:id', ensureAdmin,async (req, res) => {
   const roomId = req.params.id;
   try {
     const [rooms] = await pool.query('SELECT * FROM rooms WHERE id = ?', [roomId]);
@@ -67,7 +72,7 @@ router.get('/rooms/:id', async (req, res) => {
 });
 
 // Show edit form for a room
-router.get('/rooms/:id/edit', async (req, res) => {
+router.get('/rooms/:id/edit', ensureAdmin, async (req, res) => {
   const roomId = req.params.id;
   try {
     const [rooms] = await pool.query('SELECT * FROM rooms WHERE id = ?', [roomId]);
@@ -82,7 +87,7 @@ router.get('/rooms/:id/edit', async (req, res) => {
 });
 
 // Update the room
-router.post('/rooms/:id/edit', async (req, res) => {
+router.post('/rooms/:id/edit', ensureAdmin, async (req, res) => {
   const roomId = req.params.id;
   const { room_number, room_type, is_booked } = req.body;
 
@@ -127,7 +132,7 @@ router.post('/rooms/:id/edit', async (req, res) => {
 });
 
 // Delete a room
-router.post('/rooms/:id/delete', async (req, res) => {
+router.post('/rooms/:id/delete', ensureAdmin, async (req, res) => {
   const roomId = req.params.id;
   try {
     const [result] = await pool.query('DELETE FROM rooms WHERE id = ?', [roomId]);

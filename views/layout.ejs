@@ -53,34 +53,48 @@
 
       <div class="collapse navbar-collapse bg-dark w-100" id="navbarSupportedContent">
         <ul class="navbar-nav ml-auto">
-          <li class="nav-item dropdown">
-            <a
-              class="nav-link dropdown-toggle"
-              href="#"
-              id="navbarDropdown"
-              role="button"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              Account
-            </a>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-              <span class="dropdown-item">Hotel <b>Name hotel</b></span>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="/profile"><i class="fa fa-user"></i> Profile</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="/logout"><i class="fa fa-out"></i> Logout</a>
-            </div>
-          </li>
+          <% if (typeof user !== 'undefined' && user) { %>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                Hello, <%= user.username %> (<%= user.role %>)
+              </a>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                <span class="dropdown-item">Hotel <b>Name hotel</b></span>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/profile"><i class="fa fa-user"></i> Profile</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/logout"><i class="fa fa-sign-out"></i> Logout</a>
+              </div>
+            </li>
+          <% } else { %>
+            <li class="nav-item">
+              <a class="nav-link" href="/login">Login</a>
+            </li>
+          <% } %>
         </ul>
+        
         <ul class="navbar-nav side-nav bg-dark text-light" id="nav-st">
-          <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="/rooms">Rooms</a></li>
-          <li class="nav-item"><a class="nav-link" href="/bookings">Reservation</a></li>
-          <!-- <li class="nav-item"><a class="nav-link" href="/rooms/new">Add new Room</a></li> -->
-          <!-- <li class="nav-item"><a class="nav-link" href="#">Customers</a></li> -->
-          <!-- <li class="nav-item"><a class="nav-link" href="#">Bill</a></li> -->
+          
+          <% if (typeof user !== 'undefined' && user && user.role === 'admin') { %>
+            <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+              <li class="nav-item"><a class="nav-link" href="/rooms">Rooms</a></li>
+              <li class="nav-item"><a class="nav-link" href="/rooms/new">Add new Room</a></li>
+              <li class="nav-item"><a class="nav-link" href="/bookings">Reservations</a></li>
+              <!-- Add other admin-only links here, e.g. Customers, Bill -->
+          <% } else if (typeof user !== 'undefined' && user && user.role === 'receptionist') { %>
+              <li class="nav-item"><a class="nav-link" href="/booking">New Reservation</a></li>
+              <li class="nav-item"><a class="nav-link" href="/bookings">All bookings</a></li>
+              <li class="nav-item"><a class="nav-link" href="/rooms">Rooms</a></li>
+          <% } %>
+          
         </ul>
       </div>
     </nav>

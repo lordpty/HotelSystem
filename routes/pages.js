@@ -2,6 +2,11 @@ const express = require('express');
 const router = express.Router();
 const { createBooking } = require('../controllers/bookingController');
 const pool = require('../config/db');
+const {
+  ensureAuthenticated,
+  ensureAdmin,
+  ensureReceptionistOrAdmin,
+} = require('../middlewares/auth');
 
 // Render login page
 router.get('/login', (req, res) => {
@@ -10,7 +15,7 @@ router.get('/login', (req, res) => {
 
 // Render signup page
 router.get('/signup', (req, res) => {
-  res.render('signup', { title: 'Sign Up' });
+  res.render('signup', { title: 'Sign Up', errors:[] });
 });
 
 // Render receptionist booking page
@@ -50,10 +55,4 @@ router.post('/booking', async (req, res) => {
     }
   });
   
-
-// Render admin panel page
-router.get('/admin', (req, res) => {
-  res.render('admin', { title: 'Admin Panel' });
-});
-
 module.exports = router;

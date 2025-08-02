@@ -1,6 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const bookingController = require('../controllers/bookingController');
+const {
+  ensureAuthenticated,
+  ensureAdmin,
+  ensureReceptionistOrAdmin,
+} = require('../middlewares/auth');
 
 // Create booking
 router.post('/booking', async (req, res) => {
@@ -36,7 +41,7 @@ router.get('/bookings', async (req, res) => {
 });
 
 // Get single booking (e.g., for editing)
-router.get('/booking/:id', async (req, res) => {
+router.get('/booking/:id', ensureAdmin, async (req, res) => {
   try {
     const booking = await bookingController.getBookingById(req.params.id);
     if (!booking) return res.status(404).send('Booking not found');
@@ -47,7 +52,7 @@ router.get('/booking/:id', async (req, res) => {
 });
 
 // Update booking
-router.post('/booking/:id/edit', async (req, res) => {
+router.post('/booking/:id/edit', ensureAdmin, async (req, res) => {
   try {
     const updated = await bookingController.updateBooking(req.params.id, req.body);
     if (!updated) return res.status(404).send('Booking not found');
@@ -58,7 +63,7 @@ router.post('/booking/:id/edit', async (req, res) => {
 });
 
 // Delete booking
-router.post('/booking/:id/delete', async (req, res) => {
+router.post('/booking/:id/delete', ensureAdmin, async (req, res) => {
   try {
     const deleted = await bookingController.deleteBooking(req.params.id);
     if (!deleted) return res.status(404).send('Booking not found');
